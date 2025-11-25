@@ -72,5 +72,8 @@ void main() {
     System.out.println("Vertices: " + g.getNumberOfVertices());
     System.out.println("Edges: " + g.getNumberOfEdges());
     g.removeVertex(1);
+    g.removeEdge(2,3);
+    System.out.println("Vertices: " + g.getNumberOfVertices());
+    System.out.println("Edges: " + g.getNumberOfEdges());
     g.printGraph();
 }
