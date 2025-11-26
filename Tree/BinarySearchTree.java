@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.Stack;
 
 class BinarySearchTree {
 
@@ -117,6 +118,76 @@ class BinarySearchTree {
         }
     }
 
+    // Iterative Traversals
+    void inorderIterative() {
+        if (root == null) return;
+
+        Stack<Node> stack = new Stack<>();
+        Node current = root;
+
+        while (current != null || !stack.isEmpty()) {
+            // Go to the leftmost node
+            while (current != null) {
+                stack.push(current);
+                current = current.left;
+            }
+
+            // Current must be null at this point, so pop from stack
+            current = stack.pop();
+            System.out.print(current.key + " ");
+
+            // Visit the right subtree
+            current = current.right;
+        }
+    }
+
+    void preorderIterative() {
+        if (root == null) return;
+
+        Stack<Node> stack = new Stack<>();
+        stack.push(root);
+
+        while (!stack.isEmpty()) {
+            Node current = stack.pop();
+            System.out.print(current.key + " ");
+
+            // Push right child first, then left child
+            if (current.right != null) {
+                stack.push(current.right);
+            }
+            if (current.left != null) {
+                stack.push(current.left);
+            }
+        }
+    }
+
+    void postorderIterative() {
+        if (root == null) return;
+
+        Stack<Node> s1 = new Stack<>();
+        Stack<Node> s2 = new Stack<>();
+
+        s1.push(root);
+
+        while (!s1.isEmpty()) {
+            Node current = s1.pop();
+            s2.push(current);
+
+            if (current.left != null) {
+                s1.push(current.left);
+            }
+            if (current.right != null) {
+                s1.push(current.right);
+            }
+        }
+
+        // Print the post-order traversal
+        while (!s2.isEmpty()) {
+            Node node = s2.pop();
+            System.out.print(node.key + " ");
+        }
+    }
+
     // 4. Main Method
     static void main(String[] args) {
         BinarySearchTree bst = new BinarySearchTree();
@@ -136,12 +207,22 @@ class BinarySearchTree {
             System.out.println("Inserted " + num);
         }
 
+        System.out.println("\n--- Recursive Traversals ---");
         System.out.println("\nFinal Sorted Tree (Inorder Traversal):");
         bst.inorder();
         System.out.println("\n(Pre-order Traversal):");
         bst.preOrder();
         System.out.println("\n(Post-order Traversal):");
         bst.postOrder();
+
+        System.out.println("\n\n--- Iterative Traversals ---");
+        System.out.println("\nIterative Inorder Traversal:");
+        bst.inorderIterative();
+        System.out.println("\nIterative Pre-order Traversal:");
+        bst.preorderIterative();
+        System.out.println("\nIterative Post-order Traversal:");
+        bst.postorderIterative();
+
         scanner.close();
     }
 }
