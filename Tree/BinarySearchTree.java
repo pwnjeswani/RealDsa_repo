@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.Stack;
 
@@ -188,6 +189,54 @@ class BinarySearchTree {
         }
     }
 
+    boolean isNodePresent(int key) {
+        Node node = searchNodeIterative(root,key);
+        return node != null;
+    }
+
+    private Node searchNodeIterative(Node root,int key) {
+        Node current = root;
+        while(current != null) {
+            if(current.key == key) return current;
+            else if(current.key > key) current = current.left;
+            else current = current.right;
+        }
+        return null;
+    }
+
+    boolean isNodePresentRecursive(int key) {
+        Node node = searchNodeRecursive(root,key);
+        return node != null;
+    }
+
+    private Node searchNodeRecursive(Node root,int key) {
+        if (root == null) return null;
+
+        if (root.key == key) return root;
+
+        if (root.key > key) return searchNodeRecursive(root.left, key);
+
+        return searchNodeRecursive(root.right, key);
+    }
+
+
+    private int heightOfTree(Node root) {
+        if (root == null) return 0;
+        return 1 + Math.max(heightOfTree(root.left), heightOfTree(root.right));
+    }
+
+    // Print tree sideways
+    void printTree(Node root, int space) {
+        if (root == null) return;
+
+        space += 5; // distance between levels
+
+        printTree(root.right, space);
+        System.out.println();
+        for (int i = 5; i < space; i++) System.out.print(" ");
+        System.out.println(root.key);
+        printTree(root.left, space);
+    }
     // 4. Main Method
     static void main(String[] args) {
         BinarySearchTree bst = new BinarySearchTree();
@@ -223,6 +272,12 @@ class BinarySearchTree {
         System.out.println("\nIterative Post-order Traversal:");
         bst.postorderIterative();
 
+        System.out.println("*** isNodePresent iterative, 5 = " + bst.isNodePresent(5));
+        System.out.println("#### isNodePresent recursive, 5 = " + bst.isNodePresentRecursive(5));
+
+        System.out.println("printTree visualize");
+        bst.printTree(bst.root,5);
+        System.out.println("Height of tree = " + bst.heightOfTree(bst.root));
         scanner.close();
     }
 }
