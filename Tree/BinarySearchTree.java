@@ -1,6 +1,4 @@
-import java.util.Arrays;
-import java.util.Scanner;
-import java.util.Stack;
+import java.util.*;
 
 class BinarySearchTree {
 
@@ -225,6 +223,37 @@ class BinarySearchTree {
         return 1 + Math.max(heightOfTree(root.left), heightOfTree(root.right));
     }
 
+    private int heightOfTreeIterative(Node root) {
+        if (root == null) return 0;
+        Stack<Node> stack = new Stack<>();
+        stack.push(root);
+        int height = 0;
+        while (!stack.isEmpty()) {
+            Node current = stack.pop();
+            height++;
+            if (current.left != null) stack.push(current.left);
+            if (current.right != null) stack.push(current.right);
+        }
+        return height;
+    }
+
+    private int heightOfTreeIterativeQueue(Node root){
+        if (root == null) return 0;
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(root);
+        int height = 0;
+        while (!queue.isEmpty()) {
+            int levelSize = queue.size();
+            for (int i = 0; i < levelSize; i++) {
+                Node current = queue.poll();
+                if (current.left != null) queue.add(current.left);
+                if (current.right != null) queue.add(current.right);
+            }
+            height++;
+        }
+        return height;
+    }
+
     // Print tree sideways
     void printTree(Node root, int space) {
         if (root == null) return;
@@ -237,6 +266,49 @@ class BinarySearchTree {
         System.out.println(root.key);
         printTree(root.left, space);
     }
+
+    // Public wrapper method for deletion
+    void delete(int key) {
+        root = deleteNode(root, key);
+    }
+
+    /* A recursive function to delete a key in the BST */
+    private Node deleteNode(Node root, int key) {
+        // Base Case: If the tree is empty
+        if (root == null) return root;
+
+        // Recur down the tree
+        if (key < root.key) {
+            root.left = deleteNode(root.left, key);
+        } else if (key > root.key) {
+            root.right = deleteNode(root.right, key);
+        } else {
+            // Node with only one child or no child
+            if (root.left == null) {
+                return root.right;
+            } else if (root.right == null) {
+                return root.left;
+            }
+
+            // Node with two children: Get the inorder successor (smallest in the right subtree)
+            root.key = findMinValue(root.right);
+
+            // Delete the inorder successor
+            root.right = deleteNode(root.right, root.key);
+        }
+
+        return root;
+    }
+
+    private int findMinValue(Node root) {
+        int minValue = root.key;
+        while (root.left != null) {
+            minValue = root.left.key;
+            root = root.left;
+        }
+        return minValue;
+    }
+
     // 4. Main Method
     static void main(String[] args) {
         BinarySearchTree bst = new BinarySearchTree();
@@ -278,6 +350,7 @@ class BinarySearchTree {
         System.out.println("printTree visualize");
         bst.printTree(bst.root,5);
         System.out.println("Height of tree = " + bst.heightOfTree(bst.root));
+        System.out.println("Height of tree iterative Q = " + bst.heightOfTreeIterativeQueue(bst.root));
         scanner.close();
     }
 }
